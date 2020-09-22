@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+
+  </head>
+  <body>
+    <div class="container">
+      <form action="/books" id="formbook">
+        <input type="hidden" name="skipCount" id="skipCount">
+        <header>
+          <h1 class="title"><%= title %></h1>
+            <input type="text" class="input-buscar" name="busca" value="<%= busca %>"/>
+            <button class="button-buscar">BUSCAR</button>
+        </header>
+        <div class="filter">
+          <div class="filter-content">
+            Filtrar ano de publicação:
+            <input type="number" id="anoInicial" name="anoInicial" value="<%= anoInicial %>"/>
+            até
+            <input type="number" id="anoFinal" name="anoFinal" value="<%= anoFinal %>" />
+          </div>
+          <% if(total || total === 0) {%>
+            <span class="filter-text">
+              <%= total %> resultados encontrados
+            </span>
+          <%} %>
+        </div>
+        <div class="content">
+          <table class="table-books">
+            <thead>
+              <th>Livro</th>
+              <th>Autor</th>
+              <th>Editora</th>
+              <th>Ano</th>
+              <th>Ações</th>
+            </thead>
+            <tbody>
+              <% for(const book of books){%>
+                <tr>
+                  <td><%= book.titulo %> <br/> (<%= book.isbn %>)</td>
+                  <td><%= book.autor %></td>
+                  <td><%= book.editora %></td>
+                  <td><%= book.ano %></td>
+                  <td><a href="#" onclick="openBookModal('<%= JSON.stringify(book) %>')">Detalhes</a></td>
+                </tr>
+              <%}%>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <% if(initPagination !== '1') { %>
+              <a onclick="paginationClick('<%= initPagination %>anterior')" href="#" onclick="paginationClick">&laquo;</a>
+            <%}%>
+            <%
+              const paginationQuantity = Math.round(total / 10)
+              const finishPagination2 = (finishPagination < paginationQuantity ? finishPagination : paginationQuantity);
+              for(let i = initPagination; i <= finishPagination2; i++)
+            {%>
+                <a onclick="paginationClick(<%= i %>)" href="#" class="<%= i == skipCount ? 'active' : '' %>"><%= i %></a>
+            <%}%>
+            <% if(finishPagination2 < paginationQuantity) { %>
+              <a href="#">...</a>
+              <a onclick="paginationClick(<%= paginationQuantity %>)" href="#"><%= paginationQuantity %></a>
+            <%}%>
+            <% if(finishPagination2 !== paginationQuantity) { %>
+              <a onclick="paginationClick('<%= finishPagination2 %>proximo')" href="#">&raquo;</a>
+            <%}%>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- The Modal -->
+    <div id="book-modal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <div class="modal-container">
+          <!-- <form method="put" action="/books"> -->
+            <div class="group-form">
+              <label for="book-id">ID</label>
+              <input type="text" disabled name="book-id" id="book-id">
+            </div>
+            <div class="group-form">
+              <label for="book-title">Título</label>
+              <input type="text" name="book-title" id="book-title">
+            </div>
+            <div class="group-form">
+              <label for="book-isbn">ISBN</label>
+              <input type="text" name="book-isbn" id="book-isbn">
+            </div>
+            <div class="group-form">
+              <label for="book-autor">Autor</label>
+              <input type="text" name="book-autor" id="book-autor">
+            </div>
+            <div class="group-form">
+              <label for="book-editora">Editora</label>
+              <input type="text" name="book-editora" id="book-editora">
+            </div>
+            <div class="group-form">
+              <label for="book-ano">Ano</label>
+              <input type="number" name="book-ano" id="book-ano">
+            </div>
+
+            <div class="group-form">
+              <button onclick="atualizarLivro()">Atualizar</button>
+            </div>
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+    <script>
+      function paginationClick(skipCount) {
+        document.getElementById("skipCount").value = skipCount;
+        const form = document.getElementById("formbook")
+        form.submit();
+        return false;
+      }
+
+      const modal = document.getElementById("book-modal");
+      var span = document.getElementsByClassName("close")[0];
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+      function openBookModal(book) {
+        console.log('openBookModal', book)
+        const showBook = JSON.parse(book);
+        document.getElementById('book-id').value = showBook.id
+        document.getElementById('book-title').value = showBook.titulo
+        document.getElementById('book-isbn').value = showBook.isbn
+        document.getElementById('book-autor').value = showBook.autor
+        document.getElementById('book-editora').value = showBook.editora
+        document.getElementById('book-ano').value = showBook.ano
+
+        modal.style.display = "block";
+      }
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+
+      function atualizarLivro() {
+        console.log('init atualizarLivro');
+        const book = {
+          titulo: document.getElementById('book-title').value,
+          isbn: document.getElementById('book-isbn').value,
+          autor: document.getElementById('book-autor').value,
+          editora: document.getElementById('book-editora').value,
+          ano: document.getElementById('book-ano').value,
+        }
+        console.log('atualizarLivro', book);
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", `/books/${document.getElementById('book-id').value}`, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function() { // Chama a função quando o estado mudar.
+          if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+              // Requisição finalizada. Faça o processamento aqui.
+            alert('Atualizado com sucesso.')
+            modal.style.display = "none";
+          } else if(this.readyState === XMLHttpRequest.DONE) {
+            alert('Erro ao tentar atualizar, valide os dados e tente novamente.')
+          }
+        }
+        xhr.send(JSON.stringify(book));
+      }
+    </script>
+  </body>
+</html>

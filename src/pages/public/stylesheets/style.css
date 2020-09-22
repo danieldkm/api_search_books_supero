@@ -1,0 +1,178 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  padding: 50px;
+  font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+a {
+  color: #00b7ff;
+}
+
+.container {
+  max-width: 1100px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  max-height: 50px;
+}
+
+input {
+  height: 30px;
+}
+
+.title {
+}
+
+.input-buscar {
+  margin: 0 1.5rem 0;
+  width: 75rem;
+}
+
+button {
+  width: 80px;
+  height: 30px;
+}
+
+.filter {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-content {
+  justify-content: space-between;
+  width: 70rem;
+}
+
+.filter-text {
+  text-align: right;
+  width: 30rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-books {
+  width: 100vw;
+  max-width: 1100px;
+  border-collapse: collapse;
+}
+.table-books td, .table-books th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table-books tr:nth-child(even){background-color: #f2f2f2;}
+
+.table-books tr:hover {background-color: #ddd;}
+
+.table-books th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #929492;
+  color: white;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.pagination a.active {
+  background-color: #929492;
+  color: white;
+  border: 1px solid #929492;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50vw;
+}
+
+.modal-container {
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+  /* align-items: flex-start;
+  justify-content: space-between; */
+}
+
+.group-form {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.group-form label {
+  width: 5rem;
+}
+
+.group-form input {
+  width: 30rem;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
